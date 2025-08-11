@@ -10,30 +10,45 @@ public class Main {
         int height = 30;
         double screenRelation = (double) width / height;
         double pixelAspect = 14.0 / 24.0;
-        char[] gradient ={' ', '.', ':', '/', 'r', 'O', '@' };
+        char[] gradient ={' ','.'};
         int gradientSize = gradient.length-1;
 
 
         for (int t = 0; ; t++) {
+            Vec3 light = new Vec3(Math.cos(t * 0.05), Math.sin(t * 0.05), -1.0).norm();
             StringBuilder frame = new StringBuilder();
             frame.append("\033[H");
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    double dx = (double)x / width * 2.0 - 1.0;
-                    double dy = (double) y / height * 2.0 - 1.0;
+                    Vec2 uv = new Vec2(x, y)
+                            .div(new Vec2(width, height))
+                            .mul(new Vec2(2.0))
+                            .sub(new Vec2(1.0));
 
-                    dx = dx * screenRelation * pixelAspect;
-                    dx += Math.sin(t * 0.05);
+                    uv.x = uv.x * screenRelation * pixelAspect;
+                    uv.x = uv.x + Math.sin(t * 0.0);
 
-                    double distanceSquared = dx * dx + dy * dy;
-                    double distance = Math.sqrt(distanceSquared);
+                    Vec3 rayOrigin = new Vec3(-2,0,0);
+                    Vec3 rayDirection = new Vec3(1, uv).norm();
 
-                    int color = (int) (1.0 / distance);
 
+
+                    char pixel = ' ';
+                    int color = 0;
+
+                    Vec2 intersection = Geometry.sphIntersect(rayOrigin,
+                                                            rayDirection,
+                                                            1);
+                    if (intersection.x >0) {
+                        Vec3 itPoint = rayOrigin.sum(rayDirection.mul(new Vec3(intersection.x)));
+                        Vec3 n = itPoint.norm();
+                        double diff = n.scalar_product(light);
+                        color = (int)(diff * 20);
+                    }
                     color = (int) clamp(color, 0, gradientSize);
-
-                    frame.append(gradient[color]);
+                    pixel = gradient[color];
+                    frame.append(pixel);
                 }
                 frame.append('\n');
             }

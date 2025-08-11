@@ -1,5 +1,6 @@
 class Geometry {
-    Vec2 sphIntersect (Vec3 rayOrigin, Vec3 rayDirection, double radius){
+
+    static Vec2 sphIntersect (Vec3 rayOrigin, Vec3 rayDirection, double radius){
         double originProjectionOnRay = rayOrigin.scalar_product(rayDirection);
         double distanceSquaredFromCenter = rayOrigin.scalar_product(rayOrigin) - radius * radius;
         double discriminant = originProjectionOnRay * originProjectionOnRay - distanceSquaredFromCenter;
