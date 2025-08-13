@@ -9,4 +9,5 @@ class Geometry {
         double intersectionOffset = Math.sqrt(discriminant);
         return new Vec2(-originProjectionOnRay - intersectionOffset, -originProjectionOnRay + intersectionOffset);
     }
+
 }

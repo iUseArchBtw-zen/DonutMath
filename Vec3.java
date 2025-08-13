@@ -38,6 +38,7 @@ class Vec3 {
         return new Vec3(x/length, y/length, z/length);
     }
 
+
     double scalar_product(Vec3 other) {
         return x * other.x + y * other.y + z * other.z;
     }
